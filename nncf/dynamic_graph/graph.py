@@ -465,6 +465,15 @@ class NNCFGraphPatternIO:
         self.input_nodes = input_nodes
         self.output_nodes = output_nodes
 
+colorMap = {'conv2d': 'red', 'batch_norm': 'blue',\
+            'RELU': 'magenta', 'max_pool2d': 'green',\
+            '__iadd__': 'orange', 'gelu': 'brown',\
+            'mean': 'yellow', 'layer_norm': 'aquamarine',\
+             '__mul__': 'cyan', '__rmul__': 'gold', 'matmul': 'indigo',\
+            '__add__': 'maroon', 'sigmoid': 'plum', 'prelu': 'teal', 'elu_': 'navy',\
+            'elu': 'Turquoise', 'avg_pool3d': 'silver', 'avg_pool2d': 'olive', 'adaptive_avg_pool3d':\
+            'wheat', 'adaptive_avg_pool2d': 'crimson', 'batch_norm3d': 'azure', 'hardtanh': 'lime',\
+            'symmetric_quantize': "pink"}
 
 class NNCFGraph:
     ID_NODE_ATTR = "id"
@@ -634,11 +643,12 @@ class NNCFGraph:
         out_graph = nx.DiGraph()
         for node_name, node in self._nx_graph.nodes.items():
             op_exec_context = node[NNCFGraph.OP_EXEC_CONTEXT_NODE_ATTR]
-
+            paint = op_exec_context.operator_name
             attrs_node = {}
             attrs_node['label'] = str(node[NNCFGraph.ID_NODE_ATTR]) + ' ' + str(op_exec_context.input_agnostic)
+            print(paint)
 
-            out_graph.add_node(node_name, **attrs_node)
+            out_graph.add_node(node_name, **attrs_node, color=colorMap.get(paint, 'black'))
 
         for u, v in self._nx_graph.edges:
             out_graph.add_edge(u, v, label=self._nx_graph.edges[u, v][NNCFGraph.ACTIVATION_SHAPE_EDGE_ATTR])
